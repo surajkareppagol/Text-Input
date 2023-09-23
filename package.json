@@ -1,0 +1,14 @@
+{
+  "name": "text_input",
+  "version": "1.0.0",
+  "description": "Text input, written in JS.",
+  "main": "index.js",
+  "scripts": {
+    "start": "live-server"
+  },
+  "author": "suraj kareppagol",
+  "license": "ISC",
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}

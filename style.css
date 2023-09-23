@@ -1,0 +1,119 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap");
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  background-image: linear-gradient(to right, #456fe8, #19b0ec);
+  height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-family: "Poppins", sans-serif;
+}
+
+.form {
+  max-width: 120rem;
+  margin: 0 auto;
+
+  position: relative;
+}
+
+.form__input {
+  opacity: 0;
+  font-size: 2rem;
+
+  width: 36rem;
+  height: 12rem;
+
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+}
+
+.form__div {
+  font-size: 2rem;
+  background-color: #fff;
+  display: inline-block;
+
+  width: 40rem;
+  height: 12rem;
+
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+
+  border: 2px solid #000;
+  border-radius: 11px;
+
+  box-shadow: 4px 4px 0px #000;
+
+  overflow-wrap: break-word;
+
+  overflow-y: scroll;
+}
+
+.form__p {
+  padding: 2rem 4rem;
+}
+
+.form__container {
+  transform: translateY(-8.4rem);
+
+  background-color: #fff;
+
+  width: 40rem;
+
+  border: 2px solid #000;
+  border-radius: 11px;
+}
+
+.option-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1rem;
+
+  padding: 0 0 0 2rem;
+}
+
+.option {
+  font-size: 2rem;
+
+  padding: 0.4rem 0.8rem;
+
+  width: 2.8rem;
+  text-align: center;
+
+  font-family: "Playfair Display", serif;
+
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.option__b {
+}
+
+.option__i {
+  font-style: italic;
+}
+
+.option__n {
+  text-decoration: line-through;
+}
