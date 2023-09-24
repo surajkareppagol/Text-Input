@@ -43,23 +43,24 @@ optionItalics.addEventListener("click", (event) => {
 
 optionEmoji.addEventListener("click", (event) => {
   currentStyle = "emoji";
-  currentStyle = "italics";
 
   formInputValueNone = "";
   formInputValueBold = "";
   formInputValueItalics = "";
 
-  emojiBox.classList.toggle("u-display-flex");
-
-  emojiOptions.forEach((emoji) =>
-    emoji.addEventListener("click", () => {
-      formInputValueEmoji = emoji;
-      formInputValue.push(formInputValueEmoji.textContent);
-      currentInputStackLength = formInputValue.length;
-      emojiBox.classList.toggle("u-display-flex");
-    })
-  );
+  emojiBox.classList.add("u-display-flex");
 });
+
+emojiOptions.forEach((emoji) =>
+  emoji.addEventListener("click", () => {
+    formInputValueEmoji = emoji;
+    formInputValue.push(formInputValueEmoji.textContent);
+    currentInputStackLength = formInputValue.length;
+    formDiv.innerHTML = `<p class="form__p">${formInputValue.join(" ")}</p>`;
+    emojiBox.classList.remove("u-display-flex");
+    currentStyle = "none";
+  })
+);
 
 formInput.addEventListener("keydown", (event) => {
   if (event.key.length === 1) {
@@ -79,7 +80,6 @@ formInput.addEventListener("keydown", (event) => {
 });
 
 function handleFormText(key, type) {
-  console.log(formInputValue);
   if (formInputValue.length > currentInputStackLength) formInputValue.pop();
 
   if (type === "none") {
