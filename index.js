@@ -5,95 +5,91 @@ const formDiv = document.querySelector(".form__div");
 const optionBold = document.querySelector(".option__b");
 const optionItalics = document.querySelector(".option__i");
 const optionNone = document.querySelector(".option__n");
+const optionEmoji = document.querySelector(".option__e");
+
+const emojiBox = document.querySelector(".emoji-box");
+const emojiOptions = document.querySelectorAll(".emoji-option");
 
 let formInputValue = [];
 let formInputValueBold = "";
 let formInputValueItalics = "";
 let formInputValueNone = "";
+let formInputValueEmoji = "";
 
 let currentStyle = "none";
-let previousStyle = "none";
 
 let currentInputStackLength = 0;
 
-let parts = 0;
+optionNone.addEventListener("click", (event) => {
+  currentStyle = "none";
+  currentInputStackLength = formInputValue.length;
+  formInputValueBold = "";
+  formInputValueItalics = "";
+});
+
+optionBold.addEventListener("click", (event) => {
+  currentStyle = "bold";
+  currentInputStackLength = formInputValue.length;
+  formInputValueNone = "";
+  formInputValueItalics = "";
+});
+
+optionItalics.addEventListener("click", (event) => {
+  currentStyle = "italics";
+  currentInputStackLength = formInputValue.length;
+  formInputValueNone = "";
+  formInputValueBold = "";
+});
+
+optionEmoji.addEventListener("click", (event) => {
+  currentStyle = "emoji";
+  currentStyle = "italics";
+
+  formInputValueNone = "";
+  formInputValueBold = "";
+  formInputValueItalics = "";
+
+  emojiBox.classList.toggle("u-display-flex");
+
+  emojiOptions.forEach((emoji) =>
+    emoji.addEventListener("click", () => {
+      formInputValueEmoji = emoji;
+      formInputValue.push(formInputValueEmoji.textContent);
+      currentInputStackLength = formInputValue.length;
+      emojiBox.classList.toggle("u-display-flex");
+    })
+  );
+});
 
 formInput.addEventListener("keydown", (event) => {
-  optionNone.addEventListener("click", (event) => {
-    previousStyle = currentStyle;
-    currentStyle = "none";
-  });
-
-  optionBold.addEventListener("click", (event) => {
-    previousStyle = currentStyle;
-    currentStyle = "bold";
-  });
-
-  optionItalics.addEventListener("click", (event) => {
-    previousStyle = currentStyle;
-    currentStyle = "italics";
-  });
-
   if (event.key.length === 1) {
-    if (currentStyle == "none") {
-      if (formInputValue.length > currentInputStackLength) formInputValue.pop();
-
-      currentInputStackLength = formInputValue.length;
-
-      formInputValueNone += event.key;
-
-      formInputValue.push(formInputValueNone);
-
-      if (formInputValue.length !== currentInputStackLength) {
-        if (previousStyle == "bold") {
-          formInputValue.push(formInputValueBold);
-        } else if (previousStyle == "italics") {
-          formInputValue.push(formInputValueItalics);
-        }
-      }
-
-      formInputValueBold = "";
-      formInputValueItalics = "";
-    } else if (currentStyle == "bold") {
-      if (formInputValue.length > currentInputStackLength) formInputValue.pop();
-
-      currentInputStackLength = formInputValue.length;
-
-      formInputValueBold += event.key;
-
-      formInputValue.push(`<strong>${formInputValueBold}</strong>`);
-
-      if (formInputValue.length !== currentInputStackLength) {
-        if (previousStyle == "none") {
-          formInputValue.push(formInputValueNone);
-        } else if (previousStyle == "italics") {
-          formInputValue.push(formInputValueItalics);
-        }
-      }
-
-      formInputValueNone = "";
-      formInputValueItalics = "";
-    } else if (currentStyle == "italics") {
-      if (formInputValue.length > currentInputStackLength) formInputValue.pop();
-
-      currentInputStackLength = formInputValue.length;
-
-      formInputValueItalics += event.key;
-
-      formInputValue.push(`<em>${formInputValueItalics}</em>`);
-
-      if (formInputValue.length !== currentInputStackLength) {
-        if (previousStyle == "none") {
-          formInputValue.push(formInputValueNone);
-        } else if (previousStyle == "bold") {
-          formInputValue.push(formInputValueBold);
-        }
-      }
-
-      formInputValueNone = "";
-      formInputValueBold = "";
+    switch (currentStyle) {
+      case "none":
+        handleFormText(event.key, "none");
+        break;
+      case "bold":
+        handleFormText(event.key, "bold");
+        break;
+      case "italics":
+        handleFormText(event.key, "italics");
     }
   }
 
   formDiv.innerHTML = `<p class="form__p">${formInputValue.join(" ")}</p>`;
 });
+
+function handleFormText(key, type) {
+  console.log(formInputValue);
+  if (formInputValue.length > currentInputStackLength) formInputValue.pop();
+
+  if (type === "none") {
+    formInputValueNone += key;
+    formInputValue.push(formInputValueNone);
+  } else if (type === "bold") {
+    formInputValueBold += key;
+    formInputValue.push(`<strong>${formInputValueBold}</strong>`);
+  } else if (type === "italics") {
+    formInputValueItalics += key;
+    formInputValue.push(`<em>${formInputValueItalics}</em>`);
+  }
+}
