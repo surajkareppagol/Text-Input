@@ -109,6 +109,8 @@ body {
   font-weight: 700;
 
   cursor: pointer;
+
+  transition: all 0.2s;
 }
 
 .option__i {
@@ -128,6 +130,7 @@ body {
 
 .option__e:hover {
   filter: grayscale(0);
+  transform-origin: center;
   transform: scale(1.2);
 }
 
@@ -180,4 +183,12 @@ hr {
   align-items: center;
   justify-content: center;
   gap: 1rem;
+}
+
+.select-option {
+  background-color: rgba(0, 0, 0, 0.9);
+  color: #fff;
+  border-radius: 99px;
+  padding: 0rem;
+  text-align: center;
 }
