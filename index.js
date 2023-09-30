@@ -5,7 +5,7 @@ const formDiv = document.querySelector(".form__div");
 const optionList = document.querySelectorAll(".option");
 const optionBold = document.querySelector(".option__b");
 const optionItalics = document.querySelector(".option__i");
-const optionNone = document.querySelector(".option__n");
+const optionStrikeThrough = document.querySelector(".option__s");
 const optionEmoji = document.querySelector(".option__e");
 
 const emojiBox = document.querySelector(".emoji-box");
@@ -14,8 +14,9 @@ const emojiOptions = document.querySelectorAll(".emoji-option");
 let formInputValue = [];
 let formInputValueBold = "";
 let formInputValueItalics = "";
-let formInputValueNone = "";
+let formInputValueStrikeThrough = "";
 let formInputValueEmoji = "";
+let formInputValueNone = "";
 
 let currentStyle = "none";
 
@@ -23,34 +24,50 @@ let currentInputStackLength = 0;
 
 function addStyle(option) {
   optionList.forEach((option) => option.classList.remove("select-option"));
+
+  if (!option) return;
+
   option.classList.add("select-option");
 }
 
-addStyle(optionNone);
+optionStrikeThrough.addEventListener("click", (event) => {
+  if (currentStyle === "strikeThrough") {
+    currentStyle = "none";
+    currentInputStackLength = formInputValue.length;
+    formInputValueBold = "";
+    formInputValueItalics = "";
+    formInputValueNone = "";
 
-optionNone.addEventListener("click", (event) => {
-  currentStyle = "none";
+    addStyle(null);
+    return;
+  }
+
+  currentStyle = "strikeThrough";
   currentInputStackLength = formInputValue.length;
   formInputValueBold = "";
   formInputValueItalics = "";
+  formInputValueNone = "";
 
-  addStyle(optionNone);
+  addStyle(optionStrikeThrough);
 });
 
 optionBold.addEventListener("click", (event) => {
   if (currentStyle === "bold") {
     currentStyle = "none";
     currentInputStackLength = formInputValue.length;
-    formInputValueNone = "";
+    formInputValueStrikeThrough = "";
     formInputValueItalics = "";
-    addStyle(optionNone);
+    formInputValueNone = "";
+
+    addStyle(null);
     return;
   }
 
   currentStyle = "bold";
   currentInputStackLength = formInputValue.length;
-  formInputValueNone = "";
+  formInputValueStrikeThrough = "";
   formInputValueItalics = "";
+  formInputValueNone = "";
 
   addStyle(optionBold);
 });
@@ -58,17 +75,20 @@ optionBold.addEventListener("click", (event) => {
 optionItalics.addEventListener("click", (event) => {
   if (currentStyle === "italics") {
     currentStyle = "none";
-    addStyle(optionNone);
     currentInputStackLength = formInputValue.length;
-    formInputValueNone = "";
+    formInputValueStrikeThrough = "";
     formInputValueBold = "";
+    formInputValueNone = "";
+
+    addStyle(null);
     return;
   }
 
   currentStyle = "italics";
   currentInputStackLength = formInputValue.length;
-  formInputValueNone = "";
+  formInputValueStrikeThrough = "";
   formInputValueBold = "";
+  formInputValueNone = "";
 
   addStyle(optionItalics);
 });
@@ -76,7 +96,7 @@ optionItalics.addEventListener("click", (event) => {
 optionEmoji.addEventListener("click", (event) => {
   currentStyle = "emoji";
 
-  formInputValueNone = "";
+  formInputValueStrikeThrough = "";
   formInputValueBold = "";
   formInputValueItalics = "";
 
@@ -105,6 +125,9 @@ formInput.addEventListener("keydown", (event) => {
         break;
       case "italics":
         handleFormText(event.key, "italics");
+        break;
+      case "strikeThrough":
+        handleFormText(event.key, "strikeThrough");
     }
   }
 
@@ -123,5 +146,10 @@ function handleFormText(key, type) {
   } else if (type === "italics") {
     formInputValueItalics += key;
     formInputValue.push(`<em>${formInputValueItalics}</em>`);
+  } else if (type === "strikeThrough") {
+    formInputValueStrikeThrough += key;
+    formInputValue.push(
+      `<span class="u-strike-through">${formInputValueStrikeThrough}</span>`
+    );
   }
 }

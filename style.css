@@ -44,7 +44,6 @@ body {
 }
 
 .form__div {
-  font-size: 2rem;
   background-color: #fff;
   display: inline-block;
 
@@ -70,6 +69,7 @@ body {
 
 .form__p {
   padding: 2rem 4rem;
+  font-size: 2rem;
 }
 
 .form__container {
@@ -117,7 +117,8 @@ body {
   font-style: italic;
 }
 
-.option__n {
+.option__s {
+  font-weight: 500;
   text-decoration: line-through;
 }
 
@@ -191,4 +192,9 @@ hr {
   border-radius: 99px;
   padding: 0rem;
   text-align: center;
+}
+
+.u-strike-through {
+  font-size: 2rem;
+  text-decoration: line-through;
 }
