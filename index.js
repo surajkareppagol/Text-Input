@@ -1,8 +1,15 @@
 "use strict";
 
+import {
+  setCurrentStyle,
+  handleFormText,
+  handleBackSpace,
+  handleEmoji,
+} from "./util.js";
+
 const formInput = document.querySelector(".form__input");
 const formDiv = document.querySelector(".form__div");
-const optionList = document.querySelectorAll(".option");
+
 const optionBold = document.querySelector(".option__b");
 const optionItalics = document.querySelector(".option__i");
 const optionStrikeThrough = document.querySelector(".option__s");
@@ -13,7 +20,10 @@ const emojiBox = document.querySelector(".emoji-box");
 const emojiOptions = document.querySelectorAll(".emoji-option");
 
 let formInputValue = [];
-let formInputTextValue = "";
+let textWithDeletedLetter = "";
+let stackValue = "";
+
+let isSameStyle = false;
 
 let currentStyle = "none";
 
@@ -23,71 +33,89 @@ if (formInputValue.length === 0) {
   formDiv.innerHTML = "<p class='form__p-empty'>Start Writing Here...</p>";
 }
 
-function addStyle(option) {
-  optionList.forEach((option) => option.classList.remove("select-option"));
-
-  if (!option) return;
-
-  option.classList.add("select-option");
-}
-
 optionBold.addEventListener("click", () => {
-  setCurrentStyle("bold", optionBold);
+  currentInputStackLength = formInputValue.length;
+  isSameStyle = setCurrentStyle(currentStyle, "bold", optionBold);
+
+  currentStyle = "bold";
+  if (isSameStyle) currentStyle = "none";
 });
 
 optionItalics.addEventListener("click", () => {
-  setCurrentStyle("italics", optionItalics);
+  currentInputStackLength = formInputValue.length;
+  isSameStyle = setCurrentStyle(currentStyle, "italics", optionItalics);
+
+  currentStyle = "italics";
+  if (isSameStyle) currentStyle = "none";
 });
 
 optionStrikeThrough.addEventListener("click", () => {
-  setCurrentStyle("strikeThrough", optionStrikeThrough);
+  currentInputStackLength = formInputValue.length;
+  isSameStyle = setCurrentStyle(
+    currentStyle,
+    "strikeThrough",
+    optionStrikeThrough
+  );
+
+  currentStyle = "strikeThrough";
+  if (isSameStyle) currentStyle = "none";
 });
 
 optionCode.addEventListener("click", () => {
-  setCurrentStyle("code", optionCode);
+  currentInputStackLength = formInputValue.length;
+  isSameStyle = setCurrentStyle(currentStyle, "code", optionCode);
+
+  currentStyle = "code";
+  if (isSameStyle) currentStyle = "none";
 });
 
 optionEmoji.addEventListener("click", () => {
   emojiBox.classList.toggle("u-display-flex");
 });
 
-emojiOptions.forEach((emoji) =>
+emojiOptions.forEach((emoji) => {
   emoji.addEventListener("click", () => {
-    formInputTextValue = emoji;
-
-    formInputValue.push(formInputTextValue.textContent);
+    handleEmoji();
+    const selectedEmoji = emoji.textContent;
+    formInputValue.push(selectedEmoji);
     currentInputStackLength = formInputValue.length;
 
     formDiv.innerHTML = `<p class="form__p">${formInputValue.join(" ")}</p>`;
     emojiBox.classList.remove("u-display-flex");
-
-    formInputTextValue = "";
-    currentStyle = "none";
-  })
-);
+  });
+});
 
 formInput.addEventListener("keydown", (event) => {
   if (event.key === "Backspace" && formInputValue.length !== 0) {
-    handleBackSpace();
+    textWithDeletedLetter = handleBackSpace(formInputValue.at(-1));
+    formInputValue.pop();
+
+    if (textWithDeletedLetter !== null) {
+      formInputValue.push(textWithDeletedLetter);
+    }
   }
 
   if (event.key.length === 1) {
+    if (formInputValue.length > currentInputStackLength) formInputValue.pop();
+
     switch (currentStyle) {
       case "none":
-        handleFormText(event.key, "none");
+        stackValue = handleFormText(event.key, "none");
         break;
       case "bold":
-        handleFormText(event.key, "bold");
+        stackValue = handleFormText(event.key, "bold");
         break;
       case "italics":
-        handleFormText(event.key, "italics");
+        stackValue = handleFormText(event.key, "italics");
         break;
       case "strikeThrough":
-        handleFormText(event.key, "strikeThrough");
+        stackValue = handleFormText(event.key, "strikeThrough");
         break;
       case "code":
-        handleFormText(event.key, "code");
+        stackValue = handleFormText(event.key, "code");
     }
+
+    formInputValue.push(stackValue);
   }
 
   formDiv.innerHTML = `<p class="form__p">${formInputValue.join(" ")}</p>`;
@@ -96,69 +124,3 @@ formInput.addEventListener("keydown", (event) => {
     formDiv.innerHTML = "<p class='form__p-empty'>Start Writing Here...</p>";
   }
 });
-
-function handleFormText(key, type) {
-  if (formInputValue.length > currentInputStackLength) formInputValue.pop();
-
-  if (type === "none") {
-    formInputTextValue += key;
-    formInputValue.push(`<span>${formInputTextValue}</span>`);
-  } else if (type === "bold") {
-    formInputTextValue += key;
-    formInputValue.push(`<strong>${formInputTextValue}</strong>`);
-  } else if (type === "italics") {
-    formInputTextValue += key;
-    formInputValue.push(`<em>${formInputTextValue}</em>`);
-  } else if (type === "strikeThrough") {
-    formInputTextValue += key;
-    formInputValue.push(
-      `<span class="u-strike-through">${formInputTextValue}</span>`
-    );
-  } else if (type === "code") {
-    formInputTextValue += key;
-    formInputValue.push(`<span class="code">${formInputTextValue}</span>`);
-  }
-}
-
-function handleBackSpace() {
-  const lastItem = formInputValue.at(-1);
-
-  const indexOfCloseBracket = lastItem.indexOf(">");
-  const indexOfOpenBracket = lastItem.lastIndexOf("<");
-
-  const tagValue = lastItem
-    .slice(indexOfCloseBracket + 1, indexOfOpenBracket)
-    .slice(0, -1);
-
-  const value = `${lastItem.slice(
-    0,
-    indexOfCloseBracket + 1
-  )}${tagValue}${lastItem.slice(indexOfOpenBracket, lastItem.length + 1)}`;
-
-  formInputValue.pop();
-
-  formInputTextValue = formInputTextValue.slice(0, -1);
-
-  if (!tagValue) {
-    return;
-  }
-
-  formInputValue.push(value);
-}
-
-function setCurrentStyle(style, stylize) {
-  if (currentStyle === style) {
-    currentStyle = "none";
-    currentInputStackLength = formInputValue.length;
-    formInputTextValue = "";
-
-    addStyle(null);
-    return;
-  }
-
-  currentStyle = style;
-  currentInputStackLength = formInputValue.length;
-  formInputTextValue = "";
-
-  addStyle(stylize);
-}
