@@ -72,6 +72,13 @@ body {
   font-size: 2rem;
 }
 
+.form__p-empty {
+  padding: 2rem 4rem;
+  font-size: 2rem;
+
+  opacity: 50%;
+}
+
 .form__container {
   transform: translateY(-8.4rem);
 
@@ -120,6 +127,10 @@ body {
 .option__s {
   font-weight: 500;
   text-decoration: line-through;
+}
+
+.option__c {
+  font-weight: 900;
 }
 
 .option__e {
@@ -197,4 +208,15 @@ hr {
 .u-strike-through {
   font-size: 2rem;
   text-decoration: line-through;
+}
+
+.code {
+  font-size: 1.8rem;
+  color: #fbf5f3;
+
+  background-color: #2c2c34;
+
+  padding: 0rem 1rem;
+
+  border-radius: 4px;
 }
