@@ -46,29 +46,25 @@ export function handleFormText(key, type) {
   }
 }
 
-export function handleBackSpace(lastItem) {
-  const indexOfCloseBracket = lastItem.indexOf(">");
-  const indexOfOpenBracket = lastItem.lastIndexOf("<");
+export function handleBackSpace(inputValue, stackValue) {
+  const indexOfCloseBracket = stackValue.indexOf(">");
+  const indexOfOpenBracket = stackValue.lastIndexOf("<");
 
-  const tagValue = lastItem
-    .slice(indexOfCloseBracket + 1, indexOfOpenBracket)
-    .slice(0, -1);
+  const openTag = stackValue.slice(0, indexOfCloseBracket + 1);
+  const closeTag = stackValue.slice(indexOfOpenBracket, stackValue.length + 1);
 
-  const value = `${lastItem.slice(
-    0,
-    indexOfCloseBracket + 1
-  )}${tagValue}${lastItem.slice(indexOfOpenBracket, lastItem.length + 1)}`;
+  const value = `${openTag}${inputValue}${closeTag}`;
 
-  if (!tagValue) {
+  if (!inputValue) {
     formInputTextValue = "";
     return null;
   }
 
-  formInputTextValue = formInputTextValue.slice(0, -1);
+  formInputTextValue = inputValue;
 
   return value;
 }
 
-export function handleEmoji() {
+export function cleanUpText() {
   formInputTextValue = "";
 }

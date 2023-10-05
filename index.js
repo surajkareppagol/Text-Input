@@ -4,7 +4,7 @@ import {
   setCurrentStyle,
   handleFormText,
   handleBackSpace,
-  handleEmoji,
+  cleanUpText,
 } from "./util.js";
 
 const formInput = document.querySelector(".form__input");
@@ -75,7 +75,7 @@ optionEmoji.addEventListener("click", () => {
 
 emojiOptions.forEach((emoji) => {
   emoji.addEventListener("click", () => {
-    handleEmoji();
+    cleanUpText();
     const selectedEmoji = emoji.textContent;
     formInputValue.push(selectedEmoji);
     currentInputStackLength = formInputValue.length;
@@ -86,8 +86,17 @@ emojiOptions.forEach((emoji) => {
 });
 
 formInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    formInputValue.push("<br />");
+    currentInputStackLength = formInputValue.length;
+    cleanUpText();
+  }
+
   if (event.key === "Backspace" && formInputValue.length !== 0) {
-    textWithDeletedLetter = handleBackSpace(formInputValue.at(-1));
+    textWithDeletedLetter = handleBackSpace(
+      formInput.value.slice(0, -1),
+      formInputValue.at(-1)
+    );
     formInputValue.pop();
 
     if (textWithDeletedLetter !== null) {
